@@ -305,6 +305,8 @@ class App extends Component {
       .on("swipeup", ev => this.decrementRows())
       .on("swipeleft", ev => this.incrementColumns())
       .on("swiperight", ev => this.decrementColumns())
+      .on("pinchin", ev => { this.incrementColumns(); this.incrementRows();} )
+      .on("pinchout", ev => { this.decrementColumns(); this.decrementRows();})
   }
 
   handleKeydown (ev) {
