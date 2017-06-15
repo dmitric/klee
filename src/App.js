@@ -281,7 +281,7 @@ class App extends Component {
     if (settings.width >= 500) {
       settings.padding = 120
     } else {
-      settings.padding = 50
+      settings.padding = 40
     }
 
     this.setState(settings)
