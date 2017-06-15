@@ -17,7 +17,7 @@ class App extends Component {
       displayColorPickers: true,
       backgroundColor: "#F3F0EC",
       lineColor: "#201915",
-      padding: 60
+      padding: 120
     };
   }
 
@@ -279,6 +279,12 @@ class App extends Component {
     const dim = Math.min(width, height)
     const settings = { width: dim , height: dim }
 
+    if (settings.width >= 500) {
+      settings.padding = 120
+    } else {
+      settings.padding = 60
+    }
+
     this.setState(settings)
   }
 
@@ -303,7 +309,7 @@ class App extends Component {
   }
 
   handleKeydown (ev) {
-    if (ev.which === 67) {
+    if (ev.which === 67 && !(ev.metaKey || ev.ctrlKey)) {
       ev.preventDefault()
       this.setState({displayColorPickers: !this.state.displayColorPickers})
     } else if (ev.which === 83 && (ev.metaKey || ev.ctrlKey)) {
