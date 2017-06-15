@@ -146,8 +146,6 @@ class App extends Component {
           if (!shouldAdd) {
             circIndex = circles.length;
           }
-
-          console.log(`distanceBetweenCenters: ${distanceBetweenCenters}, required distance: ${testCirc.r + circ.r}`)
         }
 
         if (shouldAdd || circles.length === 0) {
@@ -282,7 +280,7 @@ class App extends Component {
     if (settings.width >= 500) {
       settings.padding = 120
     } else {
-      settings.padding = 60
+      settings.padding = 50
     }
 
     this.setState(settings)
