@@ -1,0 +1,20 @@
+{
+  "name": "klee",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "hammerjs": "^2.0.8",
+    "react": "^15.6.0",
+    "react-color": "^2.12.1",
+    "react-dom": "^15.6.0"
+  },
+  "devDependencies": {
+    "react-scripts": "1.0.7"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject"
+  }
+}
