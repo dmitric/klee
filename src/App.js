@@ -134,6 +134,7 @@ class App extends Component {
           r: radius
         }
 
+        // no overlaps
         for (let circIndex = 0; circIndex < circles.length; circIndex++) {
           let testCirc = circles[circIndex];
           
