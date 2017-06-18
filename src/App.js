@@ -246,7 +246,7 @@ class App extends Component {
         } 
         <div style={{ padding: this.state.padding }}> 
           <svg width={actualWidth} height={actualHeight}>
-            <rect width={"100%"} height={"100%"} stroke={this.state.lineColor} fill={this.state.backgroundColor} />
+            <rect width={"100%"} height={"100%"} stroke={this.state.lineColor} fill={this.state.backgroundColor} strokeWidth={3} />
             <g>
               {renderCircles}
             </g>
