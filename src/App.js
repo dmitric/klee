@@ -8,17 +8,33 @@ import tinycolor from 'tinycolor2'
 
 class App extends Component {
   constructor(props) {
-    super(props);
+    super(props)
     this.state = {
       rows: 10,
-      columns: 8,
+      columns: 14,
       width: 100,
       height: 100,
-      displayColorPickers: true,
-      backgroundColor: "#F3F0EC",
-      lineColor: "#201915",
-      padding: 120
+      displayColorPickers: false,
+      backgroundColor: "#0A0013",
+      lineColor: "#F8E71C",
+      strokeWidth: 2,
+      fillColor: "#3F3A01",
+      fillOpacity: 0.28,
+      padding: 20,
+      running: false,
+      frames: 0
     };
+  }
+
+  toggleRun() {
+    this.setState({running: !this.state.running})
+  }
+
+  tick () {
+    if (this.state.running) {
+      const update = {frames: this.state.frames + 1}
+      this.setState(update)
+    }
   }
 
   generateRandomNumbers (n, m, minRandom) {
@@ -50,19 +66,27 @@ class App extends Component {
   };
 
   decrementColumns () {
-    this.setState({columns: Math.max(3, this.state.columns -1) })
+    this.setState({columns: Math.max(2, this.state.columns -1) })
   }
 
   incrementColumns () {
-    this.setState({columns: Math.min(20, this.state.columns + 1) })
+    this.setState({columns: Math.min(40, this.state.columns + 1) })
   }
 
   decrementRows () {
-    this.setState({rows: Math.max(3, this.state.rows -1) })
+    this.setState({rows: Math.max(2, this.state.rows -1) })
   }
 
   incrementRows () {
     this.setState({rows: Math.min(20, this.state.rows + 1) })
+  }
+
+  decrementStrokeWidth () {
+    this.setState({strokeWidth: Math.max(0.5, this.state.strokeWidth - 0.5) })
+  }
+
+  incrementStrokeWidth () {
+    this.setState({strokeWidth: Math.min(15, this.state.strokeWidth + 0.5) })
   }
 
   render() {
@@ -113,7 +137,8 @@ class App extends Component {
         
         renderLines.push(
           <line key={`${i}-${j}`} x1={allXs[j-1]} y1={lines[i][j-1].y}
-                x2={allXs[j]} y2={perturbedY} stroke={this.state.lineColor} />
+                x2={allXs[j]} y2={perturbedY} stroke={this.state.lineColor}
+                 strokeWidth={this.state.strokeWidth} strokeLinecap="round" />
           )
       }
     }
@@ -121,16 +146,18 @@ class App extends Component {
     const circles = []
     const renderCircles = []
 
-    for (let c = 0; c < this.state.columns - 1; c++) {
+    for (let c = 0; c < this.state.rows - 1 + this.between(0, Math.min(this.state.rows*0.1, 2)); c++) {
       let added = false
       let shouldAdd = false
 
       while (!added) {
-        const radius = this.between(actualWidth*0.02/2, actualHeight/this.state.columns);
+        const widerThanTall = actualWidth >= actualHeight
+
+        const radius = widerThanTall ? this.between(actualWidth*0.02/2, actualHeight/this.state.rows) : this.between(actualWidth*0.02/2, actualWidth/this.state.columns);
         
         const circ = {
           x: this.between(actualWidth*0.01 + radius, actualWidth*0.99 - radius) ,
-          y: this.between(actualWidth*0.01 + radius, actualWidth*0.99 - radius) ,
+          y: this.between(actualHeight*0.01 + radius, actualHeight*0.99 - radius) ,
           r: radius
         }
 
@@ -156,7 +183,8 @@ class App extends Component {
           renderCircles.push(
             <circle key={c} cx={circ.x}
                     cy={circ.y} r={radius}
-                    fill='none' stroke={this.state.lineColor} />
+                    fill={this.state.fillColor} stroke={this.state.lineColor}
+                    strokeWidth={this.state.strokeWidth} fillOpacity={this.state.fillOpacity} />
           )
         }
 
@@ -174,6 +202,8 @@ class App extends Component {
 
       return lines
     }
+
+    let id = 0
 
     for (let rowIndex = 0; rowIndex < this.state.rows; rowIndex ++) {
       for (let colIndex = 0; colIndex < this.state.columns - 1; colIndex ++) {
@@ -219,21 +249,32 @@ class App extends Component {
         let topIntercept = topRightCorner.y - topSlope * topRightCorner.x
         
         if (chance >= 0.85) {
-          randomNumberOfLines(10, 20, allXs[colIndex], allXs[colIndex+1]).forEach(val => {
+          randomNumberOfLines(10/this.state.strokeWidth, 20/this.state.strokeWidth, allXs[colIndex], allXs[colIndex+1]).forEach(val => {
             renderHorizontalLines.push(
-              <line x1={val} y1={val*topSlope + topIntercept} x2={val} y2={val*bottomSlope + bottomIntercept} stroke={this.state.lineColor} />
+              <line key={id++} x1={val} y1={val*topSlope + topIntercept} x2={val} y2={val*bottomSlope + bottomIntercept}
+                stroke={this.state.lineColor}  strokeWidth={this.state.strokeWidth} />
             )
           })
         } else if (chance >= 0.70) {
-          randomNumberOfLines(15, 25, allXs[colIndex], allXs[colIndex+1]).forEach(val => {
+          randomNumberOfLines(15/this.state.strokeWidth, 25/this.state.strokeWidth, allXs[colIndex], allXs[colIndex+1]).forEach(val => {
             const val2 = this.between(allXs[colIndex], allXs[colIndex+1])
+            
+            const x1 = val
+            const y1 = val*topSlope + topIntercept
+            const x2 = val2
+            const y2 = val2*bottomSlope + bottomIntercept
+
             renderHorizontalLines.push(
-              <line x1={val} y1={val*topSlope + topIntercept} x2={val2} y2={val2*bottomSlope + bottomIntercept} stroke={this.state.lineColor} />
+              <line key={id++} x1={x1} y1={y1} x2={x2} y2={y2}
+                stroke={this.state.lineColor}  strokeWidth={this.state.strokeWidth} />
             )
           })
         }
       }
     }
+
+    const fillColor = tinycolor(this.state.fillColor)
+    fillColor.setAlpha(this.state.fillOpacity)
 
     return (
       <div className="App" style={{ backgroundColor: this.state.backgroundColor}}>
@@ -242,11 +283,18 @@ class App extends Component {
             handleChange={ (color) => this.setState({backgroundColor: color.hex}) } />
           <ColorPicker color={tinycolor(this.state.lineColor).toRgb()} disableAlpha={true}
             handleChange={ (color) => this.setState({lineColor: color.hex}) } />
+          <ColorPicker color={fillColor.toRgb()} disableAlpha={false}
+            handleChange={ (color) => {
+                this.setState({fillColor: color.hex, fillOpacity: color.rgb.a}) 
+              }
+            } />
             </div> : null
         } 
         <div style={{ padding: this.state.padding }}> 
           <svg width={actualWidth} height={actualHeight}>
-            <rect width={"100%"} height={"100%"} stroke={this.state.lineColor} fill={this.state.backgroundColor} strokeWidth={3} />
+            <rect width={"100%"} height={"100%"}
+              stroke={this.state.lineColor} fill={this.state.backgroundColor}
+              strokeWidth={this.state.strokeWidth*3} />
             <g>
               {renderCircles}
             </g>
@@ -275,13 +323,14 @@ class App extends Component {
     const width = w.innerWidth || documentElement.clientWidth || body.clientWidth,
         height = w.innerHeight|| documentElement.clientHeight|| body.clientHeight
 
-    const dim = Math.min(width, height)
-    const settings = { width: dim , height: dim }
+    //const dim = Math.min(width, height)
+
+    const settings = { width: width , height: height }
 
     if (settings.width >= 500) {
-      settings.padding = 120
+      settings.padding = 20
     } else {
-      settings.padding = 40
+      settings.padding = 20
     }
 
     this.setState(settings)
@@ -290,16 +339,21 @@ class App extends Component {
   componentWillUnmount () {
     window.removeEventListener("resize", this.updateDimensions.bind(this), true)
     window.removeEventListener('keydown', this.handleKeydown.bind(this), true)
+    window.clearInterval(this.interval)
   }
 
   componentDidMount () {
     window.addEventListener("resize", this.updateDimensions.bind(this), true)
     window.addEventListener('keydown', this.handleKeydown.bind(this), true)
 
+    this.interval = window.setInterval(this.tick.bind(this), 469)
+
     const mc = new Hammer(document, { preventDefault: true })
 
     mc.get('swipe').set({ direction: Hammer.DIRECTION_ALL })
     mc.get('pinch').set({ enable: true })
+
+    mc.add(new Hammer.Tap({ event: 'tap', taps: 1 , pointers: 2}))
 
     mc.on("swipedown", ev => this.incrementRows())
       .on("swipeup", ev => this.decrementRows())
@@ -307,6 +361,7 @@ class App extends Component {
       .on("swiperight", ev => this.decrementColumns())
       .on("pinchin", ev => { this.incrementColumns(); this.incrementRows();} )
       .on("pinchout", ev => { this.decrementColumns(); this.decrementRows();})
+      .on('tap', ev => this.toggleRun())
   }
 
   handleKeydown (ev) {
@@ -319,9 +374,15 @@ class App extends Component {
     } else if (ev.which === 82 && !(ev.metaKey || ev.ctrlKey)) {
       ev.preventDefault()
       this.forceUpdate()
+    } else if (ev.which === 40 && (ev.metaKey || ev.ctrlKey)) {
+      ev.preventDefault()
+      this.decrementStrokeWidth()
     } else if (ev.which === 40) {
       ev.preventDefault()
       this.decrementRows()
+    } else if (ev.which === 38 && (ev.metaKey || ev.ctrlKey)) {
+      ev.preventDefault()
+      this.incrementStrokeWidth()
     } else if (ev.which === 38) {
       ev.preventDefault()
       this.incrementRows()
@@ -331,6 +392,9 @@ class App extends Component {
     } else if (ev.which === 39) {
       ev.preventDefault()
       this.incrementColumns()
+    } else if (ev.which === 84) {
+      ev.preventDefault()
+      this.toggleRun()
     }
   }
 
