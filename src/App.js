@@ -290,7 +290,7 @@ class App extends Component {
             } />
             </div> : null
         } 
-        <div style={{ padding: this.state.padding }}> 
+        <div style={{ padding: this.state.padding, paddingBottom:0 }}> 
           <svg width={actualWidth} height={actualHeight}>
             <rect width={"100%"} height={"100%"}
               stroke={this.state.lineColor} fill={this.state.backgroundColor}
