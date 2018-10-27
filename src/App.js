@@ -21,7 +21,7 @@ class App extends Component {
       fillColor: "#3F3A01",
       fillOpacity: 0.28,
       padding: 20,
-      running: false,
+      running: true,
       frames: 0
     };
   }
