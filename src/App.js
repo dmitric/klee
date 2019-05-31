@@ -14,13 +14,13 @@ class App extends Component {
       columns: 14,
       width: 100,
       height: 100,
-      displayColorPickers: false,
-      backgroundColor: "#0A0013",
-      lineColor: "#F8E71C",
-      strokeWidth: 2,
-      fillColor: "#3F3A01",
-      fillOpacity: 0.28,
-      padding: 20,
+      displayColorPickers: true,
+      backgroundColor: "#F3F0EC",
+      lineColor: "#201915",
+      strokeWidth: 1.5,
+      fillColor: "#F3F0EC",
+      fillOpacity: 0,
+      padding: 120,
       running: true,
       frames: 0
     };
@@ -290,7 +290,7 @@ class App extends Component {
             } />
             </div> : null
         } 
-        <div style={{ padding: this.state.padding, paddingBottom:0 }}> 
+        <div style={{ padding: this.state.padding }}> 
           <svg width={actualWidth} height={actualHeight}>
             <rect width={"100%"} height={"100%"}
               stroke={this.state.lineColor} fill={this.state.backgroundColor}
@@ -326,12 +326,6 @@ class App extends Component {
     //const dim = Math.min(width, height)
 
     const settings = { width: width , height: height }
-
-    if (settings.width >= 500) {
-      settings.padding = 20
-    } else {
-      settings.padding = 20
-    }
 
     this.setState(settings)
   }
