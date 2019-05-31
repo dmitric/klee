@@ -17,7 +17,7 @@ class App extends Component {
       displayColorPickers: true,
       backgroundColor: "#F3F0EC",
       lineColor: "#201915",
-      strokeWidth: 1.5,
+      strokeWidth: 1.25,
       fillColor: "#F3F0EC",
       fillOpacity: 0,
       padding: 120,
