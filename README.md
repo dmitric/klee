@@ -19,6 +19,8 @@ I have created a parameterized version, I like to call "Hommage à l'Hommage" th
 
 **Change colors** - You can change the background, or line color using the color pickers.
 
+**Toggle play/pause** - The 't' key
+
 **Toggle color pickers** - The 'c' key
 
 **Generate a new version** - The 'r' key
